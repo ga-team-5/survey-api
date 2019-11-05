@@ -64,4 +64,10 @@ const surveySchema = new mongoose.Schema({
 
 })
 
+surveySchema.virtual('totalVotes').get(function () {
+  return this.choices.reduce((acc, cur) => {
+    return acc + cur.votes
+  })
+})
+
 module.exports = mongoose.model('Survey', surveySchema)
