@@ -12,20 +12,48 @@ const surveySchema = new mongoose.Schema({
   },
   choices: [{
     option1: {
-      type: String,
-      required: true
+      title: {
+        type: String,
+        required: true
+      },
+      votes: {
+        type: Number,
+        required: true,
+        default: 0
+      }
     },
     option2: {
-      type: String,
-      required: true
+      title: {
+        type: String,
+        required: true
+      },
+      votes: {
+        type: Number,
+        required: true,
+        default: 0
+      }
     },
     option3: {
-      type: String,
-      required: true
+      title: {
+        type: String,
+        required: true
+      },
+      votes: {
+        type: Number,
+        required: true,
+        default: 0
+      }
     },
     option4: {
-      type: String,
-      required: true
+      title: {
+        type: String,
+        required: true
+      },
+      votes: {
+        type: Number,
+        required: true,
+        default: 0
+      }
     }
   }]
 },
