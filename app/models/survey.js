@@ -11,9 +11,50 @@ const surveySchema = new mongoose.Schema({
     required: true
   },
   choices: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Choice',
-    required: true
+    option1: {
+      title: {
+        type: String,
+        required: true
+      },
+      votes: {
+        type: Number,
+        required: true,
+        default: 0
+      }
+    },
+    option2: {
+      title: {
+        type: String,
+        required: true
+      },
+      votes: {
+        type: Number,
+        required: true,
+        default: 0
+      }
+    },
+    option3: {
+      title: {
+        type: String,
+        required: true
+      },
+      votes: {
+        type: Number,
+        required: true,
+        default: 0
+      }
+    },
+    option4: {
+      title: {
+        type: String,
+        required: true
+      },
+      votes: {
+        type: Number,
+        required: true,
+        default: 0
+      }
+    }
   }]
 },
 {
@@ -23,8 +64,4 @@ const surveySchema = new mongoose.Schema({
 
 })
 
-surveySchema.virtual('totalVotes').get(function(){
-  return this.choices.reduce((acc,cur) => acc + cur.votes )
-  // should add up all the votes for each choice
-})
 module.exports = mongoose.model('Survey', surveySchema)
