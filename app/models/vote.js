@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const surveySchema = new mongoose.Schema({
+const voteSchema = new mongoose.Schema({
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
@@ -23,4 +23,4 @@ const surveySchema = new mongoose.Schema({
 
 })
 
-module.exports = mongoose.model('Survey', surveySchema)
+module.exports = mongoose.model('Vote', voteSchema)
