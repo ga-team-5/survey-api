@@ -12,48 +12,20 @@ const surveySchema = new mongoose.Schema({
   },
   choices: [{
     option1: {
-      title: {
-        type: String,
-        required: true
-      },
-      votes: {
-        type: Number,
-        required: true,
-        default: 0
-      }
+      type: String,
+      required: true
     },
     option2: {
-      title: {
-        type: String,
-        required: true
-      },
-      votes: {
-        type: Number,
-        required: true,
-        default: 0
-      }
+      type: String,
+      required: true
     },
     option3: {
-      title: {
-        type: String,
-        required: true
-      },
-      votes: {
-        type: Number,
-        required: true,
-        default: 0
-      }
+      type: String,
+      required: true
     },
     option4: {
-      title: {
-        type: String,
-        required: true
-      },
-      votes: {
-        type: Number,
-        required: true,
-        default: 0
-      }
+      type: String,
+      required: true
     }
   }]
 },
@@ -62,12 +34,6 @@ const surveySchema = new mongoose.Schema({
   toObject: {virtuals: true},
   toJSON: {virtuals: true}
 
-})
-
-surveySchema.virtual('totalVotes').get(function () {
-  return this.choices.reduce((acc, cur) => {
-    return acc + cur.votes
-  })
 })
 
 module.exports = mongoose.model('Survey', surveySchema)
