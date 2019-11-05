@@ -1,18 +1,18 @@
 const mongoose = require('mongoose')
 
 const choiceSchema = new mongoose.Schema({
-  votes: {
-    type: Number,
-    required: true,
-    default: 0
-  },
+  votes: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Vote',
+    required: true
+  }],
   title: {
     type: String,
     required: true
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'Survey',
     required: true
   }
 }, {
