@@ -4,7 +4,7 @@ const express = require('express')
 const passport = require('passport')
 
 // pull in Mongoose model for votes
-const vote = require('../models/vote')
+const Vote = require('../models/vote')
 
 // this is a collection of methods that help us detect situations when we need
 // to throw a custom error
@@ -35,7 +35,7 @@ router.get('/votes', requireToken, (req, res, next) => {
       // `votes` will be an array of Mongoose documents
       // we want to convert each one to a POJO, so we use `.map` to
       // apply `.toObject` to each one
-      return votes.map(vote => Vote.toObject())
+      return votes.map(vote => vote.toObject())
     })
     // respond with status 200 and JSON of the votes
     .then(votes => res.status(200).json({ votes: votes }))
@@ -50,7 +50,7 @@ router.get('/votes/:id', requireToken, (req, res, next) => {
   Vote.findById(req.params.id)
     .then(handle404)
     // if `findById` is succesful, respond with 200 and "vote" JSON
-    .then(vote => res.status(200).json({ vote: Vote.toObject() }))
+    .then(vote => res.status(200).json({ vote: vote.toObject() }))
     // if an error occurs, pass it to the handler
     .catch(next)
 })
@@ -59,12 +59,24 @@ router.get('/votes/:id', requireToken, (req, res, next) => {
 // POST /votes
 router.post('/votes', requireToken, (req, res, next) => {
   // set owner of new vote to be current user
-  req.body.Vote.owner = req.user.id
-
-  Vote.create(req.body.vote)
+  req.body.vote.owner = req.user.id
+  // Vote.find({owner: req.user.id, survey_id: req.body.vote.survey_id})
+  //   .then(votes => {
+  //     if (votes.length > 0) {
+  //       res.status(400).json({errors: 'You can only vote once!'})
+  //     } else {
+  //       Vote.create(req.body)
+  //         .then(vote => {
+  //           res.status(201).json({vote: vote.toObject()})
+  //         })
+  //     }
+  //   })
+  //   .catch()
+  // -----------------------------------------
+  Vote.create(req.body)
     // respond to succesful `create` with status 201 and JSON of new "vote"
     .then(vote => {
-      res.status(201).json({ vote: Vote.toObject() })
+      res.status(201).json({ vote: vote.toObject() })
     })
     // if an error occurs, pass it off to our error handler
     // the error handler needs the error message and the `res` object so that it
@@ -77,7 +89,7 @@ router.post('/votes', requireToken, (req, res, next) => {
 router.patch('/votes/:id', requireToken, removeBlanks, (req, res, next) => {
   // if the client attempts to change the `owner` property by including a new
   // owner, prevent that by deleting that key/value pair
-  delete req.body.Vote.owner
+  delete req.body.vote.owner
 
   Vote.findById(req.params.id)
     .then(handle404)
