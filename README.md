@@ -1,6 +1,6 @@
 
 Entity Relationship Diagram:
-[ERD](https://i.imgur.com/S6lApeD.png)
+[ERD](<a href="https://imgur.com/S6lApeD"><img src="https://i.imgur.com/S6lApeD.png" title="source: imgur.com" /></a>)
 
 ## Links
 -   [Frontend-Repo](link)
