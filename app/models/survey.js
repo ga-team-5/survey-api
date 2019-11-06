@@ -10,7 +10,7 @@ const surveySchema = new mongoose.Schema({
     ref: 'User',
     required: true
   },
-  choices: [{
+  choices: {
     option1: {
       type: String,
       required: true
@@ -27,7 +27,7 @@ const surveySchema = new mongoose.Schema({
       type: String,
       required: true
     }
-  }]
+  }
 },
 {
   timestamps: true,
