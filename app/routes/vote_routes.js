@@ -60,27 +60,17 @@ router.get('/votes/:id', requireToken, (req, res, next) => {
 router.post('/votes', requireToken, (req, res, next) => {
   // set owner of new vote to be current user
   req.body.vote.owner = req.user.id
-  // Vote.find({owner: req.user.id, survey_id: req.body.vote.survey_id})
-  //   .then(votes => {
-  //     if (votes.length > 0) {
-  //       res.status(400).json({errors: 'You can only vote once!'})
-  //     } else {
-  //       Vote.create(req.body)
-  //         .then(vote => {
-  //           res.status(201).json({vote: vote.toObject()})
-  //         })
-  //     }
-  //   })
-  //   .catch()
-  // -----------------------------------------
-  Vote.create(req.body)
-    // respond to succesful `create` with status 201 and JSON of new "vote"
-    .then(vote => {
-      res.status(201).json({ vote: vote.toObject() })
+  Vote.find({owner: req.user.id, survey_id: req.body.vote.survey_id})
+    .then(votes => {
+      if (votes.length > 0) {
+        res.status(400).json({errors: 'You can only vote once!'})
+      } else {
+        Vote.create(req.body.vote)
+          .then(vote => {
+            res.status(201).json({vote: vote.toObject()})
+          })
+      }
     })
-    // if an error occurs, pass it off to our error handler
-    // the error handler needs the error message and the `res` object so that it
-    // can send an error message back to the client
     .catch(next)
 })
 
