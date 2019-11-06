@@ -1,8 +1,8 @@
 
 Entity Relationship Diagram:
-![Entity Relationship Diagram](https://imgur.com/S6lApeD)
+[ERD](https://i.imgur.com/S6lApeD.png)
 
-Links:
+## Links
 -   [Frontend-Repo](link)
 -   [Backend-Repo]('insertLinkHere')
 -   [Deployed-Frontend](github)
