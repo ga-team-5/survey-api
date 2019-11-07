@@ -30,17 +30,26 @@ const router = express.Router()
 // INDEX
 // GET /votes
 router.get('/votes', requireToken, (req, res, next) => {
-  Vote.find()
-    .then(votes => {
-      // `votes` will be an array of Mongoose documents
-      // we want to convert each one to a POJO, so we use `.map` to
-      // apply `.toObject` to each one
-      return votes.map(vote => vote.toObject())
-    })
-    // respond with status 200 and JSON of the votes
-    .then(votes => res.status(200).json({ votes: votes }))
-    // if an error occurs, pass it to the handler
-    .catch(next)
+  if (req.query.survey) {
+    Vote.find({survey_id: req.query.survey})
+      .then(votes => {
+        return votes.map(vote => vote.toObject())
+      })
+      .then(votes => res.status(200).json({votes: votes}))
+      .catch(next)
+  } else {
+    Vote.find()
+      .then(votes => {
+        // `votes` will be an array of Mongoose documents
+        // we want to convert each one to a POJO, so we use `.map` to
+        // apply `.toObject` to each one
+        return votes.map(vote => vote.toObject())
+      })
+      // respond with status 200 and JSON of the votes
+      .then(votes => res.status(200).json({ votes: votes }))
+      // if an error occurs, pass it to the handler
+      .catch(next)
+  }
 })
 
 // SHOW
