@@ -4,7 +4,7 @@ const express = require('express')
 const passport = require('passport')
 
 // pull in Mongoose model for surveys
-const survey = require('../models/survey')
+const Survey = require('../models/survey')
 
 // this is a collection of methods that help us detect situations when we need
 // to throw a custom error
@@ -30,24 +30,33 @@ const router = express.Router()
 // INDEX
 // GET /surveys
 router.get('/surveys', requireToken, (req, res, next) => {
-  survey.find()
-    .then(surveys => {
+  if (req.query.user) {
+    Survey.find({owner: req.query.user})
+      .then(surveys => {
+        return surveys.map(survey => survey.toObject())
+      })
+      .then(surveys => res.status(200).json({surveys: surveys}))
+      .catch(next)
+  } else {
+    Survey.find()
+      .then(surveys => {
       // `surveys` will be an array of Mongoose documents
       // we want to convert each one to a POJO, so we use `.map` to
       // apply `.toObject` to each one
-      return surveys.map(survey => survey.toObject())
-    })
+        return surveys.map(survey => survey.toObject())
+      })
     // respond with status 200 and JSON of the surveys
-    .then(surveys => res.status(200).json({ surveys: surveys }))
+      .then(surveys => res.status(200).json({ surveys: surveys }))
     // if an error occurs, pass it to the handler
-    .catch(next)
+      .catch(next)
+  }
 })
 
 // SHOW
 // GET /surveys/5a7db6c74d55bc51bdf39793
 router.get('/surveys/:id', requireToken, (req, res, next) => {
   // req.params.id will be set based on the `:id` in the route
-  survey.findById(req.params.id)
+  Survey.findById(req.params.id)
     .then(handle404)
     // if `findById` is succesful, respond with 200 and "survey" JSON
     .then(survey => res.status(200).json({ survey: survey.toObject() }))
@@ -61,7 +70,7 @@ router.post('/surveys', requireToken, (req, res, next) => {
   // set owner of new survey to be current user
   req.body.survey.owner = req.user.id
 
-  survey.create(req.body.survey)
+  Survey.create(req.body.survey)
     // respond to succesful `create` with status 201 and JSON of new "survey"
     .then(survey => {
       res.status(201).json({ survey: survey.toObject() })
@@ -79,7 +88,7 @@ router.patch('/surveys/:id', requireToken, removeBlanks, (req, res, next) => {
   // owner, prevent that by deleting that key/value pair
   delete req.body.survey.owner
 
-  survey.findById(req.params.id)
+  Survey.findById(req.params.id)
     .then(handle404)
     .then(survey => {
       // pass the `req` object and the Mongoose record to `requireOwnership`
@@ -98,7 +107,7 @@ router.patch('/surveys/:id', requireToken, removeBlanks, (req, res, next) => {
 // DESTROY
 // DELETE /surveys/5a7db6c74d55bc51bdf39793
 router.delete('/surveys/:id', requireToken, (req, res, next) => {
-  survey.findById(req.params.id)
+  Survey.findById(req.params.id)
     .then(handle404)
     .then(survey => {
       // throw an error if current user doesn't own `survey`
